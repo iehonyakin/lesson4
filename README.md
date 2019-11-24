@@ -3,13 +3,17 @@
 [root@lvm vagrant]#
 [root@lvm vagrant]#
 ######################################################## 
+#проверяе, что группа переименоваласью
 [root@lvm vagrant]# vgs
   VG         #PV #LV #SN Attr   VSize   VFree
   VolGroupHI   1   2   0 wz--n- <38.97g    0
+  
+  
 [root@lvm vagrant]# history
     1  vgs
     2  vgrename VolGroup00 VolGroupHI
-    3  vi /etc/fstab
+# меняем группу в загрузчике.
+vi /etc/fstab
     4  vi /etc/fstab
     5  nano /etc/fstab
     6  vi /etc/fstab
@@ -17,9 +21,13 @@
     8  vi  /etc/default/grub
     9  nano /boot/grub2/grub.cfg
    10  vi /boot/grub2/grub.cfg
+   
    11  mkinitrd -f -v /boot/initramfs-$(uname -r).img $(uname -r)
    12  halt
    13  vgs
+   ######################################################   
+   перегружаемся
+   ####################################################
    14  mkdir /usr/lib/dracut/modules.d/01test
    15  [root@lvm vagrant]#
    16  cd /usr/lib/dracut/modules.d/01test/
@@ -31,4 +39,7 @@
    22   mkinitrd -f -v /boot/initramfs-$(uname -r).img $(uname -r)
    23  lsinitrd -m /boot/initramfs-$(uname -r).img | grep test
    24  halt
+   #############################################
+   пингвин отправлен в чат
+   
 
