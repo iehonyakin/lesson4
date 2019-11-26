@@ -3,39 +3,44 @@
 [root@lvm vagrant]#
 [root@lvm vagrant]#
 ######################################################## 
-#проверяе, что группа переименоваласью
+# смотрим название Volume Group
 [root@lvm vagrant]# vgs
   VG         #PV #LV #SN Attr   VSize   VFree
-  VolGroupHI   1   2   0 wz--n- <38.97g    0
-  
-  
+  VolGroup00   1   2   0 wz--n- <38.97g    0
+########################################################
+# переименовываем группу 
 [root@lvm vagrant]# history
     1  vgs
     2  vgrename VolGroup00 VolGroupHI
+[root@lvm vagrant]# vgs
+  VG         #PV #LV #SN Attr   VSize   VFree
+  VolGroupHI   1   2   0 wz--n- <38.97g    0
+
+#########################################################
 # меняем группу в загрузчике.
 vi /etc/fstab
-    4  vi /etc/fstab
-    5  nano /etc/fstab
-    6  vi /etc/fstab
-    7  cat /etc/fstab
-    8  vi  /etc/default/grub
-    9  nano /boot/grub2/grub.cfg
-   10  vi /boot/grub2/grub.cfg
+vi  /etc/default/grub
+nano /boot/grub2/grub.cfg
+# Пересоздаем initrd image, чтобý он знал новое название Volume Group
+mkinitrd -f -v /boot/initramfs-$(uname -r).img $(uname -r)  
    
-   11  mkinitrd -f -v /boot/initramfs-$(uname -r).img $(uname -r)
-   12  halt
-   13  vgs
-   ######################################################   
-   перегружаемся
-   ####################################################
-   14  mkdir /usr/lib/dracut/modules.d/01test
+######################################################   
+#   перегружаемся
+####################################################
+***********************************************************
+# Добавить модуль в initrd Пингвина
+# создаем свою папку 
+mkdir /usr/lib/dracut/modules.d/01test
    15  [root@lvm vagrant]#
    16  cd /usr/lib/dracut/modules.d/01test/
+ # создаем 2 скрипта
    17  vi module-setup.sh
    18  vi test.sh
+ # выдаем права на запуск
    19  cmod +x *
    20  chmod +x *
    21  ls -l
+ # пересобираем образ initrd  
    22   mkinitrd -f -v /boot/initramfs-$(uname -r).img $(uname -r)
    23  lsinitrd -m /boot/initramfs-$(uname -r).img | grep test
    24  halt
